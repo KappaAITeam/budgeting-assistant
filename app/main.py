@@ -85,6 +85,12 @@ def budget_summary(income, expenses):
     summary_prompt = f"Create a structured budget with Income:\n {income}\n **Expenses:**\n {expenses}."
     return llm.invoke(summary_prompt).content
 
+def format_output(user_input):
+    format_prompt = ("Format this input to be injected into a webpage"
+    "do not include any additional response but just the formatted input: "
+    f"{user_input}")
+    return llm.invoke(format_prompt).content
+
 # Runnable chains for income, expenses and concerns 
 income_branch_chain = (
     RunnableLambda(lambda x: analyze_income(x)) | llm | StrOutputParser()
@@ -109,10 +115,12 @@ chain = (
         "expenses": expenses_branch_chain,
         "concerns": concerns_branch_chain
         
-        
+
     })
-    | RunnableLambda(lambda x: {"advice": financial_advice(x["branches"]["concerns"]), **x})
-    | RunnableLambda(lambda x: {"summary": budget_summary(x["branches"]["income"], x["branches"]["expenses"]), **x})
+    | RunnableLambda(lambda x: {"_advice": financial_advice(x["branches"]["concerns"]), **x})
+    | RunnableLambda(lambda x: {"_summary": budget_summary(x["branches"]["income"], x["branches"]["expenses"]), **x})
+    | RunnableLambda(lambda x: {"advice": format_output(x["_advice"]), **x})
+    | RunnableLambda(lambda x: {"summary": format_output(x["_summary"]), **x})
 
 )
 #Function to convert income and expenses details into spreedsheets
