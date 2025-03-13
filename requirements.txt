@@ -1,0 +1,11 @@
+fastapi
+pydantic
+sqlalchemy
+langchain
+openpyxl
+pandas
+dotenv
+bcrypt
+langchain_groq
+uvicorn
+python-multipart
