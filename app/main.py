@@ -2,8 +2,7 @@ import os
 import io
 import bcrypt
 import re
-from pathlib import Path
-from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, Response,BackgroundTasks
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import JSONResponse, FileResponse,StreamingResponse
 from langchain.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
@@ -11,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from langchain.schema.output_parser import StrOutputParser
 from langchain.schema.runnable import RunnableParallel, RunnableLambda
 import pandas as pd
-from openpyxl import Workbook
 from dotenv import load_dotenv
 from .models.model import *
 
