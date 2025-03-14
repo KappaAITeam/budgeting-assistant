@@ -117,10 +117,10 @@ chain = (
         
 
     })
-    | RunnableLambda(lambda x: {"_advice": financial_advice(x["branches"]["concerns"]), **x})
-    | RunnableLambda(lambda x: {"_summary": budget_summary(x["branches"]["income"], x["branches"]["expenses"]), **x})
-    | RunnableLambda(lambda x: {"advice": format_output(x["_advice"]), **x})
-    | RunnableLambda(lambda x: {"summary": format_output(x["_summary"]), **x})
+    | RunnableLambda(lambda x: {"advice": financial_advice(x["branches"]["concerns"]), **x})
+    | RunnableLambda(lambda x: {"summary": budget_summary(x["branches"]["income"], x["branches"]["expenses"]), **x})
+    | RunnableLambda(lambda x: {"formatted_advice": format_output(x["advice"]), **x})
+    | RunnableLambda(lambda x: {"formatted_summary": format_output(x["summary"]), **x})
 
 )
 #Function to convert income and expenses details into spreedsheets
@@ -186,8 +186,8 @@ def generate_budget_spreadsheet(income: str, expenses: str):
 def get_anonymous_advice(request:JournalNote):
     #Provide advice for random users 
     result= chain.invoke({'user_input':request.message})
-    advice= result["advice"]
-    summary= result["summary"]
+    advice= result["formatted_advice"]
+    summary= result["formatted_summary"]
     
     return JSONResponse({
         "Financial Advice": advice,
